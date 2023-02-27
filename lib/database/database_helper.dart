@@ -37,11 +37,11 @@ class DatabaseHelper {
     return conexion.insert(tblName, data);
   }
 
-  /*Future<int> UPDATE(String tblName, Map<String, dynamic> data) async {
+  Future<int> UPDATE(String tblName, Map<String, dynamic> data) async {
     var conexion = await database;
     return conexion
-        .update(tblName, data, where: 'idPost=?', whereArgs: [data('idPost')]);
-  }*/
+        .update(tblName, data, where: 'idPost=?', whereArgs: [data['idPost']]);
+  }
 
   Future<int> DELETE(String tblName, int idPost) async {
     var conexion = await database;
