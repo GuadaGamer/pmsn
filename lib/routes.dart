@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:psmna10/screens/Register_screen.dart';
-import 'package:psmna10/screens/dashboard_screen.dart';
+import 'package:psmnn/screens/Register_screen.dart';
+import 'package:psmnn/screens/dashboard_screen.dart';
 
 Map<String, WidgetBuilder> getApplicationRoutes() {
   return <String, WidgetBuilder>{

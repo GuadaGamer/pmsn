@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:psmna10/database/database_helper.dart';
+import 'package:psmnn/database/database_helper.dart';
 
 import '../models/post_model.dart';
 

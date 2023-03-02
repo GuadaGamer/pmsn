@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:psmna10/models/post_model.dart';
+import 'package:psmnn/models/post_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
