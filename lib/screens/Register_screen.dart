@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -163,18 +162,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
+        height: double.infinity,
         decoration: const BoxDecoration(
             image: DecorationImage(
                 opacity: .4,
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
                 image: AssetImage('assets/fondo.webp'))),
         child: SingleChildScrollView(
-            child: Form(
+            child: Column(
+          children: [
+            SafeArea(child: Container()),
+            Form(
                 key: _formKey,
                 child: Card(
                     elevation: 16.0,
                     shadowColor: Colors.deepPurple,
-                    margin: const EdgeInsets.fromLTRB(16, 40, 16, 40),
+                    margin: const EdgeInsets.all(16),
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Column(
@@ -198,20 +201,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             height: size.height * 0.01,
                           ),
                           /*Container(
-                            alignment: Alignment.center,
-                            width: double.infinity,
-                            height: 200,
-                            color: Colors.grey,
-                            child: image != null
-                                ? Image.asset(image!.path, fit: BoxFit.cover)
-                                : const Text('Por favor selecciona una imagen'),
-                          ),
-                          ElevatedButton(
-                              onPressed: () => pickImage(ImageSource.gallery),
-                              child: const Icon(Icons.image)),
-                          ElevatedButton(
-                              onPressed: () => pickImage(ImageSource.camera),
-                              child: const Icon(Icons.camera)),*/
+                                alignment: Alignment.center,
+                                width: double.infinity,
+                                height: 200,
+                                color: Colors.grey,
+                                child: image != null
+                                    ? Image.asset(image!.path, fit: BoxFit.cover)
+                                    : const Text('Por favor selecciona una imagen'),
+                              ),
+                              ElevatedButton(
+                                  onPressed: () => pickImage(ImageSource.gallery),
+                                  child: const Icon(Icons.image)),
+                              ElevatedButton(
+                                  onPressed: () => pickImage(ImageSource.camera),
+                                  child: const Icon(Icons.camera)),*/
                           Align(
                             alignment: Alignment.center,
                             child: Stack(
@@ -294,7 +297,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               child: const Text('SignUp')),
                         ],
                       ),
-                    )))),
+                    ))),
+          ],
+        )),
       ),
     );
   }

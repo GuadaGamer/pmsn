@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:psmnn/provider/theme_provider.dart';
 import 'package:psmnn/routes.dart';
+import 'package:psmnn/screens/home_screen.dart';
 import 'screens/login_screen.dart';
 
 void main() => runApp(const MyApp());
