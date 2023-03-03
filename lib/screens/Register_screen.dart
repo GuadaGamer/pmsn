@@ -161,6 +161,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         decoration: const BoxDecoration(
             image: DecorationImage(
@@ -173,7 +174,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Card(
                     elevation: 16.0,
                     shadowColor: Colors.deepPurple,
-                    margin: const EdgeInsets.all(16),
+                    margin: const EdgeInsets.fromLTRB(16, 40, 16, 40),
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Column(
