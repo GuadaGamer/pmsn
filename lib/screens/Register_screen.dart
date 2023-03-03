@@ -68,7 +68,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return "Por favor completa este campo";
       } else {
         if (!regex.hasMatch(value)) {
-          return "Tu contraseña no es segura";
+          return "Tu contraseña debe contener por lo menos: \n8 digitos\n1 Mayuscula\n1 minuscula\n1 numero\n1 caracter especial";
         } else {
           return null;
         }
@@ -211,29 +211,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ElevatedButton(
                               onPressed: () => pickImage(ImageSource.camera),
                               child: const Icon(Icons.camera)),*/
-                          Container(
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.indigo, width: 5),
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(100),
-                                )),
-                            child: ClipOval(
-                              child: pickedImage != null
-                                  ? Image.file(
-                                      pickedImage!,
-                                      width: 170,
-                                      height: 170,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.asset(
-                                      'assets/profile.png',
-                                      width: 170,
-                                      height: 170,
-                                      fit: BoxFit.cover,
-                                    ),
-                            ),
-                          ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      border:
+                                          Border.all(color: const Color.fromARGB(255, 49, 109, 51), width: 5),
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(100),
+                                      ),),
+                                  child: ClipOval(
+                                    child: pickedImage != null
+                                        ? Image.file(
+                                            pickedImage!,
+                                            width: 170,
+                                            height: 170,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Image.asset(
+                                            'assets/profile.png',
+                                            width: 170,
+                                            height: 170,
+                                            fit: BoxFit.cover,
+                                          ),
+                                  ),
+                                ),
                           Positioned(
                               bottom: 0,
                               right: 5,
@@ -241,10 +245,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 onPressed: imagePickerOption,
                                 icon: const Icon(
                                   Icons.add_a_photo_outlined,
-                                  color: Colors.blue,
+                                  color: Color.fromARGB(255, 49, 109, 51),
                                   size: 30,
                                 ),
                               )),
+                              ],
+                            ),
+                          ),
                           const SizedBox(
                             height: 15,
                           ),
@@ -252,7 +259,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: ElevatedButton.icon(
                                 onPressed: imagePickerOption,
-                                icon: const Icon(Icons.ac_unit_sharp),
+                                icon: const Icon(Icons.add_a_photo_sharp),
                                 label: const Text('Añadir imagen')),
                           ),
                           const SizedBox(
