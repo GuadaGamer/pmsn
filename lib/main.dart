@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:psmnn/provider/theme_provider.dart';
 import 'package:psmnn/routes.dart';
@@ -26,7 +27,7 @@ class PMSNApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeProvider theme = Provider.of<ThemeProvider>(context);
-    return MaterialApp(
+    return GetMaterialApp(
       theme: theme.getthemeData(),
       routes: getApplicationRoutes(),
       home: const LoginScreen(),

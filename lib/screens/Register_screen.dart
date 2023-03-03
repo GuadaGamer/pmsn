@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -15,10 +17,11 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  final ImagePicker _imagePicker = ImagePicker();
   TextEditingController dateCtl = TextEditingController();
   DateTime? _selectedDate;
-  File? image;
+  File? pickedImage;
+
+  bool circular = false;
 
   final txtMail = TextFormField(
     decoration: const InputDecoration(
@@ -75,6 +78,64 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    void imagePickerOption() {
+      Get.bottomSheet(
+        SingleChildScrollView(
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(10.0),
+              topRight: Radius.circular(10.0),
+            ),
+            child: Container(
+              color: Colors.white,
+              height: 250,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      "Pic Image From",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        pickImage(ImageSource.camera);
+                      },
+                      icon: const Icon(Icons.camera),
+                      label: const Text("CAMERA"),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        pickImage(ImageSource.gallery);
+                      },
+                      icon: const Icon(Icons.image),
+                      label: const Text("GALLERY"),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      icon: const Icon(Icons.close),
+                      label: const Text("CANCEL"),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     Size size = MediaQuery.of(context).size;
 
     final fecha = TextFormField(
@@ -99,79 +160,132 @@ class _RegisterScreenState extends State<RegisterScreen> {
       },
     );
 
-    return Form(
-        key: _formKey,
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                opacity: .4,
+                fit: BoxFit.cover,
+                image: AssetImage('assets/fondo.webp'))),
         child: SingleChildScrollView(
-            child: Card(
-                elevation: 16.0,
-                shadowColor: Colors.deepPurple,
-                margin: const EdgeInsets.all(16),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      const Icon(
-                        Icons.fact_check,
-                        color: Color.fromARGB(255, 49, 109, 51),
-                        size: 150,
+            child: Form(
+                key: _formKey,
+                child: Card(
+                    elevation: 16.0,
+                    shadowColor: Colors.deepPurple,
+                    margin: const EdgeInsets.all(16),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          const Icon(
+                            Icons.fact_check,
+                            color: Color.fromARGB(255, 49, 109, 51),
+                            size: 150,
+                          ),
+                          const Center(
+                            child: Text(
+                              'SingUp Registro',
+                              style: TextStyle(
+                                  fontSize: 30,
+                                  color: Color.fromARGB(255, 49, 109, 51),
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                          SizedBox(
+                            height: size.height * 0.01,
+                          ),
+                          /*Container(
+                            alignment: Alignment.center,
+                            width: double.infinity,
+                            height: 200,
+                            color: Colors.grey,
+                            child: image != null
+                                ? Image.asset(image!.path, fit: BoxFit.cover)
+                                : const Text('Por favor selecciona una imagen'),
+                          ),
+                          ElevatedButton(
+                              onPressed: () => pickImage(ImageSource.gallery),
+                              child: const Icon(Icons.image)),
+                          ElevatedButton(
+                              onPressed: () => pickImage(ImageSource.camera),
+                              child: const Icon(Icons.camera)),*/
+                          Container(
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.indigo, width: 5),
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(100),
+                                )),
+                            child: ClipOval(
+                              child: pickedImage != null
+                                  ? Image.file(
+                                      pickedImage!,
+                                      width: 170,
+                                      height: 170,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.asset(
+                                      'assets/profile.png',
+                                      width: 170,
+                                      height: 170,
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                          ),
+                          Positioned(
+                              bottom: 0,
+                              right: 5,
+                              child: IconButton(
+                                onPressed: imagePickerOption,
+                                icon: const Icon(
+                                  Icons.add_a_photo_outlined,
+                                  color: Colors.blue,
+                                  size: 30,
+                                ),
+                              )),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton.icon(
+                                onPressed: imagePickerOption,
+                                icon: const Icon(Icons.ac_unit_sharp),
+                                label: const Text('Añadir imagen')),
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          txtUser,
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          fecha,
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          txtMail,
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          password,
+                          SizedBox(
+                            height: size.height * 0.02,
+                          ),
+                          ElevatedButton(
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  Navigator.pushNamed(context, '/dash');
+                                }
+                              },
+                              child: const Text('SignUp')),
+                        ],
                       ),
-                      const Center(
-                        child: Text(
-                          'SingUp Registro',
-                          style: TextStyle(
-                              fontSize: 30,
-                              color: Color.fromARGB(255, 49, 109, 51),
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                      SizedBox(
-                        height: size.height * 0.01,
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        width: double.infinity,
-                        height: 200,
-                        color: Colors.grey,
-                        child: image != null
-                            ? Image.network(image!.path, fit: BoxFit.cover)
-                            : const Text('Por favor selecciona una imagen'),
-                      ),
-                      ElevatedButton(
-                          onPressed: () => pickImage(ImageSource.gallery),
-                          child: const Icon(Icons.image)),
-                      ElevatedButton(
-                          onPressed: () => pickImage(ImageSource.camera),
-                          child: const Icon(Icons.camera)),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      txtUser,
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      fecha,
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      txtMail,
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      password,
-                      SizedBox(
-                        height: size.height * 0.02,
-                      ),
-                      ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              Navigator.pushNamed(context, '/dash');
-                            }
-                          },
-                          child: const Text('SignUp')),
-                    ],
-                  ),
-                ))));
+                    )))),
+      ),
+    );
   }
 
   _selectDate(BuildContext context) async {
@@ -204,12 +318,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  Future<void> pickImage(ImageSource source) async {
-    XFile? xFileImage = await _imagePicker.pickImage(source: source);
-    if (xFileImage != null) {
+  pickImage(ImageSource imageType) async {
+    try {
+      final photo = await ImagePicker().pickImage(source: imageType);
+      if (photo == null) return;
+      final tempImage = File(photo.path);
       setState(() {
-        image = File(xFileImage.path);
+        pickedImage = tempImage;
       });
+
+      Get.back();
+    } catch (error) {
+      debugPrint(error.toString());
     }
   }
 }
