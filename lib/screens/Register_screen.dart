@@ -63,7 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     obscureText: true,
     validator: (value) {
       RegExp regex = RegExp(
-          r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~?]).{8,}$');
+          r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&/¿*~?_-]).{8,}$');
       if (value!.isEmpty) {
         return "Por favor completa este campo";
       } else {
@@ -218,11 +218,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
-                                      border:
-                                          Border.all(color: const Color.fromARGB(255, 49, 109, 51), width: 5),
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(100),
-                                      ),),
+                                    border: Border.all(
+                                        color: const Color.fromARGB(
+                                            255, 49, 109, 51),
+                                        width: 5),
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(100),
+                                    ),
+                                  ),
                                   child: ClipOval(
                                     child: pickedImage != null
                                         ? Image.file(
@@ -239,17 +242,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           ),
                                   ),
                                 ),
-                          Positioned(
-                              bottom: 0,
-                              right: 5,
-                              child: IconButton(
-                                onPressed: imagePickerOption,
-                                icon: const Icon(
-                                  Icons.add_a_photo_outlined,
-                                  color: Color.fromARGB(255, 49, 109, 51),
-                                  size: 30,
-                                ),
-                              )),
+                                Positioned(
+                                    bottom: 0,
+                                    right: 5,
+                                    child: IconButton(
+                                      onPressed: imagePickerOption,
+                                      icon: const Icon(
+                                        Icons.add_a_photo_outlined,
+                                        color: Color.fromARGB(255, 49, 109, 51),
+                                        size: 30,
+                                      ),
+                                    )),
                               ],
                             ),
                           ),
