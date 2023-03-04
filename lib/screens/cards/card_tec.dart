@@ -59,6 +59,8 @@ class CardTec extends StatelessWidget {
                   fontSize: 15,
                   letterSpacing: 1,
                 ),
+                textAlign: TextAlign.center,
+                maxLines: 4,
               )
             ],
           ),
