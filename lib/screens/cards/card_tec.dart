@@ -7,6 +7,7 @@ class CardTecData {
   final Color backgraundColor;
   final Color titleColor;
   final Color subtitleColor;
+  final Widget? backgraund;
 
   const CardTecData({
     required this.title,
@@ -15,6 +16,7 @@ class CardTecData {
     required this.backgraundColor,
     required this.titleColor,
     required this.subtitleColor,
+    this.backgraund,
   });
 }
 
@@ -25,18 +27,42 @@ class CardTec extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
-        Image(image: data.image),
-        Text(
-          data.title.toUpperCase(),
-          style: TextStyle(
-            color: data.titleColor,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1,
+        if(data.backgraund != null) data.backgraund!,
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 40,
           ),
-        )
+          child: Column(
+            children: [
+              const Spacer(flex: 3,),
+              Flexible(
+                flex: 20,
+                child: Image(image: data.image)),
+              const Spacer(flex: 1,),
+              Text(
+                data.title.toUpperCase(),
+                style: TextStyle(
+                  color: data.titleColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1,
+                ),
+              ),
+              const Spacer(flex: 1,),
+              Text(
+                data.subtitle,
+                style: TextStyle(
+                  color: data.subtitleColor,
+                  fontSize: 15,
+                  letterSpacing: 1,
+                ),
+              )
+            ],
+          ),
+        ),
       ],
     );
   }
