@@ -27,7 +27,7 @@ class CardTec extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Image(image: data.image),
+        Flexible(flex: 20, child: Image(image: data.image)),
         Text(
           data.title.toUpperCase(),
           style: TextStyle(
@@ -36,6 +36,17 @@ class CardTec extends StatelessWidget {
             fontWeight: FontWeight.bold,
             letterSpacing: 1,
           ),
+          maxLines: 1,
+        ),
+        Text(
+          data.subtitle,
+          style: TextStyle(
+            color: data.subtitleColor,
+            fontSize: 16,
+            letterSpacing: 1,
+          ),
+          textAlign: TextAlign.center,
+          maxLines: 2,
         )
       ],
     );
