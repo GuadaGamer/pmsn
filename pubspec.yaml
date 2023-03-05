@@ -46,6 +46,7 @@ dependencies:
   get: ^4.6.5
   concentric_transition: ^1.0.3
   lottie: ^2.2.0
+  shared_preferences: ^2.0.18
 
 dev_dependencies:
   flutter_test:
