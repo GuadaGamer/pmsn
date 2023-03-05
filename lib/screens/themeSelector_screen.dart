@@ -37,8 +37,7 @@ class ThemeSelectorScreen extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.green.withOpacity(0.8),
-          borderRadius: BorderRadius.circular(20),
+          color: Theme.of(context).secondaryHeaderColor,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -114,9 +113,9 @@ class ThemeSelectorScreen extends StatelessWidget {
                       Navigator.pushNamed(context, '/dash');
                     },
                     style: OutlinedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                      primary: const Color.fromRGBO(17, 117, 51, 1),
+                      foregroundColor: const Color.fromRGBO(17, 117, 51, 1), shape: const StadiumBorder(),
                       side: const BorderSide(width: 2, color: Color.fromRGBO(17, 117, 51, 1)),
+                      backgroundColor: const Color.fromRGBO(17, 117, 51, 1),
                     ),
                     child: const Text(
                       'Guardar',
@@ -134,8 +133,13 @@ class ThemeSelectorScreen extends StatelessWidget {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: const Color.fromARGB(255, 255, 0, 0), shape: const StadiumBorder(),
                       side: const BorderSide(width: 2, color: Color.fromARGB(255, 255, 0, 0)),
+                      backgroundColor: const Color.fromARGB(255, 255, 0, 0),
                     ),
-                    child: const Text('Cancelar'),
+                    child: const Text('Cancelar',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),),
                   ),
                 ],
               ),
@@ -239,6 +243,7 @@ class ThemeSelectorScreen extends StatelessWidget {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: const Color.fromRGBO(17, 117, 51, 1), shape: const StadiumBorder(),
                       side: const BorderSide(width: 2, color: Color.fromRGBO(17, 117, 51, 1)),
+                      backgroundColor: const Color.fromRGBO(17, 117, 51, 1),
                     ),
                     child:const  Text(
                       'Guardar',
@@ -248,16 +253,23 @@ class ThemeSelectorScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  OutlinedButton(
+                  ElevatedButton(
                     onPressed: () {
                       theme.setthemeData(0, context);
                       Navigator.pushNamed(context, '/dash');
                     },
                     style: OutlinedButton.styleFrom(
                       foregroundColor: const Color.fromARGB(255, 255, 0, 0), shape: const StadiumBorder(),
-                      side: const BorderSide(width: 2, color: Color.fromARGB(255, 255, 0, 0)),
+                      side: const BorderSide(width: 2, color: Color.fromARGB(255, 255, 0, 0),
+                      ),
+                      backgroundColor: Color.fromARGB(255, 255, 0, 0),
                     ),
-                    child: const Text('Cancelar'),
+                    child: const Text(
+                      'Cancelar',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),),
                   ),
                 ],
               ),
