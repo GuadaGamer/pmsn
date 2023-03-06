@@ -2,7 +2,7 @@ import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:psmnn/provider/theme_provider.dart';
-import 'package:psmnn/settings/styles_settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -13,6 +13,20 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   bool isDarkModeEnabled = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadDarkModeEnabled();
+  }
+
+  Future<void> _loadDarkModeEnabled() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isDarkModeEnabled = prefs.getBool('is_dark') ?? false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,15 +53,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
               leading: const Icon(Icons.settings),
               trailing: const Icon(Icons.chevron_right),
             ),
-            DayNightSwitcher(
-                isDarkModeEnabled: isDarkModeEnabled,
-                onStateChanged: (isDarkModeEnabled) {
-                  isDarkModeEnabled
-                      ? theme.setthemeData(StylesSettings.darkTheme(context))
-                      : theme.setthemeData(StylesSettings.lightTheme(context));
-                  this.isDarkModeEnabled = isDarkModeEnabled;
-                  setState(() {});
-                }),
+             ListTile(
+              onTap: () {
+                Navigator.pushNamed(context, '/theme');
+              },
+              title: const Text('Cambiar tema'),
+              subtitle: const Text('Selecciona el tema de la aplicación.'),
+              leading: const Icon(Icons.settings),
+              trailing: const Icon(Icons.chevron_right),
+            ),
+            ListTile(
+              onTap: () {
+                Navigator.pushNamed(context, '/login');
+              },
+              title: const Text('Cerrar sesión'),
+              leading: const Icon(Icons.close),
+            ),
           ],
         ),
       ),

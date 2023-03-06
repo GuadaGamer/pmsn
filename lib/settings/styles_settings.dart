@@ -16,4 +16,8 @@ class StylesSettings {
             .colorScheme
             .copyWith(primary: const Color.fromARGB(255, 56, 73, 56)));
   }
+
+  static ThemeData personalTheme(BuildContext? context){
+    return ThemeData.fallback();
+  }
 }
