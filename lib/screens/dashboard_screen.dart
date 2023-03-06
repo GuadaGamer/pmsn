@@ -2,6 +2,7 @@ import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:psmnn/provider/theme_provider.dart';
+import 'package:psmnn/screens/list_post.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -35,6 +36,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         title: const Text('Social TEC'),
       ),
+      body: ListPost(),
       drawer: Drawer(
         child: ListView(
           children: [
@@ -53,7 +55,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               leading: const Icon(Icons.settings),
               trailing: const Icon(Icons.chevron_right),
             ),
-             ListTile(
+            ListTile(
               onTap: () {
                 Navigator.pushNamed(context, '/theme');
               },

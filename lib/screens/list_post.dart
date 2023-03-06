@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:psmnn/database/database_helper.dart';
 
 import '../models/post_model.dart';
+import '../widgets/item_post_widget.dart';
 
 class ListPost extends StatefulWidget {
   const ListPost({super.key});
@@ -21,7 +22,8 @@ class _ListPostState extends State<ListPost> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return ItemPostModel();
+    /*FutureBuilder(
       future: databaseHelper!.GETALLPOST(),
       builder: (context, AsyncSnapshot<List<PostModel>> snapshot) {
         if (snapshot.hasData) {
@@ -29,7 +31,7 @@ class _ListPostState extends State<ListPost> {
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               var objPostModel = snapshot.data![index];
-              return Container();
+              return ItemPostModel(objPostModel: objPostModel);
             },
           );
         } else if (snapshot.hasError) {
@@ -42,6 +44,6 @@ class _ListPostState extends State<ListPost> {
           );
         }
       },
-    );
+    );*/
   }
 }
