@@ -37,6 +37,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: const Text('Social TEC'),
       ),
       body: ListPost(),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.pushNamed(context, '/add').then((value) {
+            setState(() {});
+          });
+        },
+        label: const Text('Add post'),
+        icon: const Icon(Icons.add_comment),
+      ),
       drawer: Drawer(
         child: ListView(
           children: [

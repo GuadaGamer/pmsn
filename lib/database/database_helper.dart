@@ -16,7 +16,7 @@ class DatabaseHelper {
   _initDatabase() async {
     Directory folder = await getApplicationDocumentsDirectory();
     String pathDB = join(folder.path, nameDB);
-    await openDatabase(
+    return await openDatabase(
       pathDB,
       version: versionDB,
       onCreate: _createTables,

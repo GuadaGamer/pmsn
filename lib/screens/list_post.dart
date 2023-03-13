@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:psmnn/database/database_helper.dart';
+import 'package:psmnn/provider/flags_provider.dart';
 
 import '../models/post_model.dart';
 import '../widgets/item_post_widget.dart';
@@ -22,8 +24,11 @@ class _ListPostState extends State<ListPost> {
 
   @override
   Widget build(BuildContext context) {
-    return ItemPostModel();
-    /*FutureBuilder(
+    FlagsProvider flag = Provider.of<FlagsProvider>(context);
+
+    flag.getflagListPost();
+
+    return FutureBuilder(
       future: databaseHelper!.GETALLPOST(),
       builder: (context, AsyncSnapshot<List<PostModel>> snapshot) {
         if (snapshot.hasData) {
@@ -44,6 +49,6 @@ class _ListPostState extends State<ListPost> {
           );
         }
       },
-    );*/
+    );
   }
 }
