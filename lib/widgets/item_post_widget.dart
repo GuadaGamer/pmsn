@@ -19,14 +19,14 @@ class ItemPostModel extends StatelessWidget {
     );
 
     final txtUser = const Text('Texto');
-    final datePost = const Text('06/03/2023');
+    final datePost = Text(objPostModel!.datePost!.toString());
 
     final imgPost = Image(
       image: AssetImage('assets/lince.png'),
       width: 100,
       height: 100,
     );
-    final txtDescPost = const Text('Descripcion mamalona sobre esta madre');
+    final txtDescPost = Text(objPostModel!.dscPost!);
     final iconRate = const Icon(Icons.star_rate_sharp);
 
     FlagsProvider flag = Provider.of<FlagsProvider>(context);
@@ -49,7 +49,12 @@ class ItemPostModel extends StatelessWidget {
             children: [
               iconRate,
               Expanded(child: Container()),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
+              IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/add',
+                        arguments: objPostModel);
+                  },
+                  icon: const Icon(Icons.edit)),
               IconButton(
                   onPressed: () {
                     showDialog(
@@ -65,8 +70,9 @@ class ItemPostModel extends StatelessWidget {
                                       .then((value) => flag.setflagListPost());
                                   Navigator.pop(context);
                                 },
-                                child: Text('Si')),
-                            TextButton(onPressed: () {}, child: Text('No'))
+                                child: const Text('Si')),
+                            TextButton(
+                                onPressed: () {}, child: const Text('No'))
                           ]),
                     );
                   },
