@@ -3,6 +3,7 @@ import 'package:psmnn/screens/Register_screen.dart';
 import 'package:psmnn/screens/add_post_dcreen.dart';
 import 'package:psmnn/screens/eventos_screen.dart';
 import 'package:psmnn/screens/dashboard_screen.dart';
+import 'package:psmnn/screens/list_popular_videos.dart';
 import 'package:psmnn/screens/login_screen.dart';
 import 'package:psmnn/screens/themeSelector_screen.dart';
 
@@ -14,5 +15,6 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     '/theme': (BuildContext context) => const ThemeSelectorScreen(),
     '/add': (BuildContext context) => AddPostScreen(),
     '/eventos': (BuildContext context) => const EventosScreen(),
+    '/popular': (BuildContext context) => const ListPopularVideos(),
   };
 }

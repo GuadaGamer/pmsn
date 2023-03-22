@@ -68,6 +68,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             ListTile(
               onTap: () {
+                Navigator.pushNamed(context, '/popular');
+              },
+              title: const Text('API videos'),
+              leading: const Icon(Icons.movie),
+              trailing: const Icon(Icons.chevron_right),
+            ),
+            ListTile(
+              onTap: () {
                 Navigator.pushNamed(context, '/theme');
               },
               title: const Text('Cambiar tema'),
