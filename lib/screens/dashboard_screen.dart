@@ -59,9 +59,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 accountEmail: Text('19030053@itcelaya.edu.mx')),
             ListTile(
               onTap: () {
-                Navigator.pushNamed(context, '/calendario');
+                Navigator.pushNamed(context, '/eventos');
               },
-              title: const Text('Calendario'),
+              title: const Text('Eventos'),
               subtitle: const Text('Revisa los proximos eventos'),
               leading: const Icon(Icons.edit_calendar_sharp),
               trailing: const Icon(Icons.chevron_right),
