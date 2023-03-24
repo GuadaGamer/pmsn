@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:psmnn/models/event_model.dart';
 import 'package:psmnn/models/post_model.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -29,7 +30,14 @@ class DatabaseHelper {
       dscPost VARCHAR(200),
       datePost DATE
     )''';
+    String query1 = '''CREATE TABLE tblEvent(
+      idEvent INTEGER PRIMARY KEY,
+      dscEvent VARCHAR(200),
+      fechaEvent DATE,
+      completado BOOLEAN,
+    )''';
     db.execute(query);
+    db.execute(query1);
   }
 
   Future<int> INSERT(String tblName, Map<String, dynamic> data) async {
@@ -52,5 +60,23 @@ class DatabaseHelper {
     var conexion = await database;
     var result = await conexion.query('tblPost');
     return result.map((post) => PostModel.fromMap(post)).toList();
+  }
+
+  //Querys para obtener los eventos
+  Future<int> UPDATEevent(String tblName, Map<String, dynamic> data) async {
+    var conexion = await database;
+    return conexion
+        .update(tblName, data, where: 'idEvent=?', whereArgs: [data['idEvent']]);
+  }
+
+  Future<int> DELETEevent(String tblName, int idEvent) async {
+    var conexion = await database;
+    return conexion.delete(tblName, where: 'idEvent=?', whereArgs: [idEvent]);
+  }
+
+  Future<List<EventModel>> GETALLEVENT() async {
+    var conexion = await database;
+    var result = await conexion.query('tblEvent');
+    return result.map((event) => EventModel.fromMap(event)).toList();
   }
 }

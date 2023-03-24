@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:psmnn/models/event_model.dart';
 import 'package:psmnn/utils.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -6,19 +7,36 @@ import 'package:table_calendar/table_calendar.dart';
 import '../database/database_helper.dart';
 
 class EventosScreen extends StatefulWidget {
-  EventosScreen({super.key});
-
-  DatabaseHelper database = DatabaseHelper();
-
-  EventModel? objEventModel;
+  const EventosScreen({super.key});
 
   @override
   State<EventosScreen> createState() => _EventosScreenState();
 }
 
 class _EventosScreenState extends State<EventosScreen> {
+  DatabaseHelper database = DatabaseHelper();
+
+  EventModel? objEventModel;
+
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+
+  @override
+  void initState() {
+    super.initState();
+
+     _selectedDay = _focusedDay;
+  }
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    if (!isSameDay(_selectedDay, selectedDay)) {
+      setState(() {
+        _selectedDay = selectedDay;
+        _focusedDay = focusedDay;
+      });
+    }
+  }
 
   final titleController = TextEditingController();
   final descpController = TextEditingController();
@@ -38,6 +56,7 @@ class _EventosScreenState extends State<EventosScreen> {
   );
 
   bool light = true;
+  bool? cambio = false;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +82,7 @@ class _EventosScreenState extends State<EventosScreen> {
                   child: Transform.scale(
                     scale: 2.0,
                     child: Switch(
-                      activeColor: Color.fromARGB(255, 52, 138, 55),
+                      activeColor: const Color.fromARGB(255, 52, 138, 55),
                       thumbIcon: thumbIcon,
                       value: light,
                       onChanged: (bool value) {
@@ -80,9 +99,10 @@ class _EventosScreenState extends State<EventosScreen> {
           light == true
               ? TableCalendar(
                   calendarFormat: _calendarFormat,
-                  focusedDay: kToday,
+                  focusedDay: _focusedDay,
                   firstDay: kFirstDay,
                   lastDay: kLastDay,
+                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
                   onFormatChanged: (format) {
                     if (_calendarFormat != format) {
                       setState(() {
@@ -93,6 +113,7 @@ class _EventosScreenState extends State<EventosScreen> {
                   onPageChanged: (focusedDay) {
                     _focusedDay = focusedDay;
                   },
+                  onDaySelected: _onDaySelected,
                 )
               : const Text('Ok'),
         ],
@@ -152,23 +173,51 @@ class _EventosScreenState extends State<EventosScreen> {
   }
 
   _showAddEventDialog() async {
+    bool isChecked = false;
+    Color getColor(Set<MaterialState> states) {
+      const Set<MaterialState> interactiveStates = <MaterialState>{
+        MaterialState.pressed,
+        MaterialState.hovered,
+        MaterialState.focused,
+      };
+      if (states.any(interactiveStates.contains)) {
+        return Colors.blue;
+      }
+      return Colors.red;
+    }
+
     await showDialog(
         context: context,
         builder: (context) => AlertDialog(
               title: const Text('Añadir un nuevo evemto',
                   textAlign: TextAlign.center),
-              content: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: descpController,
-                    textCapitalization: TextCapitalization.words,
-                    decoration: const InputDecoration(
-                      labelText: 'Descripción',
-                    ),
-                  ),
-                ],
+              content: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Fecha: ${DateFormat('yyyy-MM-dd').format(_selectedDay!)}',
+                        textAlign: TextAlign.center,style: const TextStyle(color: Colors.green)),
+                      TextField(
+                        controller: descpController,
+                        textCapitalization: TextCapitalization.words,
+                        decoration: const InputDecoration(
+                          labelText: 'Descripción',
+                        ),
+                      ),
+                      CheckboxListTile(
+                        fillColor: MaterialStateProperty.resolveWith(getColor),
+                        value: isChecked,
+                        title: const Text('Evento completado'),
+                        onChanged: (value) {
+                          setState(() {
+                            isChecked = value!;
+                          });
+                        }),
+                    ],
+                  );
+                }
               ),
               actions: [
                 TextButton(
@@ -186,7 +235,21 @@ class _EventosScreenState extends State<EventosScreen> {
                       );
                       return;
                     } else {
-                      print(descpController.text);
+                      //print(descpController.text);
+                      database.INSERT('tblEvent', {
+                        'dscEvent': descpController.text,
+                        'fechaEvent': _selectedDay.toString(),
+                        'completado': cambio,
+                      }).then((value) {
+                        var msj = value > 0
+                            ? 'Registro insertado'
+                            : 'ocurrio un error';
+
+                        var snackBar = SnackBar(content: Text(msj));
+
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      });
 
                       setState(() {});
 
