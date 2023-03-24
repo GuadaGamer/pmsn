@@ -26,7 +26,7 @@ class _EventosScreenState extends State<EventosScreen> {
   void initState() {
     super.initState();
 
-     _selectedDay = _focusedDay;
+    _selectedDay = _focusedDay;
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
@@ -192,33 +192,39 @@ class _EventosScreenState extends State<EventosScreen> {
               title: const Text('Añadir un nuevo evemto',
                   textAlign: TextAlign.center),
               content: StatefulBuilder(
-                builder: (BuildContext context, StateSetter setState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('Fecha: ${DateFormat('yyyy-MM-dd').format(_selectedDay!)}',
-                        textAlign: TextAlign.center,style: const TextStyle(color: Colors.green)),
-                      TextField(
-                        controller: descpController,
-                        textCapitalization: TextCapitalization.words,
-                        decoration: const InputDecoration(
-                          labelText: 'Descripción',
-                        ),
+                  builder: (BuildContext context, StateSetter setState) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                        'Fecha: ${DateFormat('yyyy-MM-dd').format(_selectedDay!)}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.green)),
+                    TextField(
+                      controller: descpController,
+                      textCapitalization: TextCapitalization.words,
+                      decoration: const InputDecoration(
+                        labelText: 'Descripción',
                       ),
-                      CheckboxListTile(
-                        fillColor: MaterialStateProperty.resolveWith(getColor),
-                        value: isChecked,
-                        title: const Text('Evento completado'),
-                        onChanged: (value) {
-                          setState(() {
-                            isChecked = value!;
-                          });
-                        }),
-                    ],
-                  );
-                }
-              ),
+                    ),
+                    Row(
+                      children: [
+                        Checkbox(
+                            fillColor:
+                                MaterialStateProperty.resolveWith(getColor),
+                            value: isChecked,
+                            onChanged: (value) {
+                              setState(() {
+                                isChecked = value!;
+                              });
+                            }),
+                        const Text('Marcar como completado'),
+                      ],
+                    ),
+                  ],
+                );
+              }),
               actions: [
                 TextButton(
                     onPressed: () => Navigator.pop(context),

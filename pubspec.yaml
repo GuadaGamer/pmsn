@@ -42,13 +42,15 @@ dependencies:
   path_provider: ^2.0.13
   image_picker: ^0.8.6+3
   email_validator: ^2.1.17
-  intl: ^0.18.0
+  intl: ^0.17.0
   get: ^4.6.5
   concentric_transition: ^1.0.3
   lottie: ^2.2.0
   shared_preferences: ^2.0.18
-  table_calendar: ^3.0.9
+  table_calendar: ^3.0.8
   http: ^0.13.5
+  firebase_auth: ^4.3.0
+  firebase_core: ^2.8.0
   #syncfusion_flutter_calendar: ^20.4.54
   #syncfusion_flutter_datepicker: ^20.4.54
 
