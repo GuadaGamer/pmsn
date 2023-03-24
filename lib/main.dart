@@ -5,6 +5,7 @@ import 'package:psmnn/provider/flags_provider.dart';
 import 'package:psmnn/provider/theme_provider.dart';
 import 'package:psmnn/routes.dart';
 import 'package:psmnn/screens/home_screen.dart';
+import 'package:psmnn/screens/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -39,7 +40,7 @@ class PMSNApp extends StatelessWidget {
     return GetMaterialApp(
       theme: theme.getthemeData(),
       routes: getApplicationRoutes(),
-      home: Home(),
+      home: const LoginScreen(),
     );
   }
 }

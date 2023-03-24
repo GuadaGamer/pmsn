@@ -14,14 +14,14 @@ class ItemPostModel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final avatar = const CircleAvatar(
+    const avatar = CircleAvatar(
       backgroundImage: AssetImage('assets/profile.png'),
     );
 
-    final txtUser = const Text('Texto');
+    const txtUser = Text('Texto');
     final datePost = Text(objPostModel!.datePost!.toString());
 
-    final imgPost = Image(
+    const imgPost = Image(
       image: AssetImage('assets/lince.png'),
       width: 100,
       height: 100,
