@@ -65,8 +65,8 @@ class DatabaseHelper {
   //Querys para obtener los eventos
   Future<int> UPDATEevent(String tblName, Map<String, dynamic> data) async {
     var conexion = await database;
-    return conexion
-        .update(tblName, data, where: 'idEvent=?', whereArgs: [data['idEvent']]);
+    return conexion.update(tblName, data,
+        where: 'idEvent=?', whereArgs: [data['idEvent']]);
   }
 
   Future<int> DELETEevent(String tblName, int idEvent) async {
@@ -76,13 +76,16 @@ class DatabaseHelper {
 
   Future<List<EventModel>> GETALLEVENT() async {
     var conexion = await database;
-    var result = await conexion.query('tblEvent', orderBy: "CASE WHEN fechaEvent = date('now') THEN 1 WHEN fechaEvent > date('now') THEN 2 ELSE 3 END, CASE WHEN fechaEvent = date('now') THEN fechaEvent WHEN fechaEvent > date('now') THEN fechaEvent ELSE -strftime('%s', fechaEvent) END");
+    var result = await conexion.query('tblEvent',
+        orderBy:
+            "CASE WHEN fechaEvent = date('now') THEN 1 WHEN fechaEvent > date('now') THEN 2 ELSE 3 END, CASE WHEN fechaEvent = date('now') THEN fechaEvent WHEN fechaEvent > date('now') THEN fechaEvent ELSE -strftime('%s', fechaEvent) END");
     return result.map((event) => EventModel.fromMap(event)).toList();
   }
 
   Future<List<EventModel>> GETDAYEVENT(String cuando) async {
     var conexion = await database;
-    var result = await conexion.rawQuery("SELECT * FROM tblEvent WHERE fechaEvent = date('$cuando')");
+    var result = await conexion
+        .rawQuery("SELECT * FROM tblEvent WHERE fechaEvent = date('$cuando')");
     return result.map((event) => EventModel.fromMap(event)).toList();
   }
 }

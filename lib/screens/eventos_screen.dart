@@ -65,31 +65,30 @@ class _EventosScreenState extends State<EventosScreen> {
     },
   );
 
-  _cargarEventos() async{
+  _cargarEventos() async {
     List<EventModel> loadedEvents =
-      (await database!.GETALLEVENT()).cast<EventModel>();
+        (await database!.GETALLEVENT()).cast<EventModel>();
     setState(() {
       events = {};
-      for (EventModel event in loadedEvents){
+      for (EventModel event in loadedEvents) {
         DateTime eventDate = DateTime.parse(event.fechaEvemt!);
-        if(events[eventDate] == null){
+        if (events[eventDate] == null) {
           events[eventDate] = [event];
-        }else{
+        } else {
           events[eventDate]!.add(event);
         }
       }
     });
   }
 
-  _cargarEventos2() async{
-    return eventDetails =
-      (await database!.GETALLEVENT()).cast<EventModel>();
+  _cargarEventos2() async {
+    return eventDetails = (await database!.GETALLEVENT()).cast<EventModel>();
   }
 
-  List _EventosxDia(DateTime day){
+  List _EventosxDia(DateTime day) {
     return events[day] ?? [];
   }
-  
+
   bool light = true;
   bool? cambio = false;
   bool dia = false;
@@ -135,248 +134,360 @@ class _EventosScreenState extends State<EventosScreen> {
             ),
           ),
           light == true
-              ? TableCalendar(
-                  calendarFormat: _calendarFormat,
-                  focusedDay: _focusedDay,
-                  firstDay: kFirstDay,
-                  locale: 'es_ES',
-                  lastDay: kLastDay,
-                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                  onFormatChanged: (format) {
-                    if (_calendarFormat != format) {
-                      setState(() {
-                        _calendarFormat = format;
-                      });
-                    }
-                  },
-                  onPageChanged: (focusedDay) {
-                    _focusedDay = focusedDay;
-                  },
-                  eventLoader: _EventosxDia,
-                  onDaySelected: _onDaySelected,
-                  availableGestures: AvailableGestures.all,
-                  calendarBuilders: CalendarBuilders(
-                    markerBuilder: (context, day, events) {
-                      BoxDecoration? decoration;
-                      TextStyle? textStyle;
-                      int daysDifference = day.difference(DateTime.now()).inDays;
-                      bool isCompletado = false;
-                      if(events.isNotEmpty){
-                        for (var element in eventDetails) {
-                          DateTime eventDate = DateTime.parse(element.fechaEvemt!);
-                          if(eventDate.day == day){
-                            isCompletado = true;
+              ? Expanded(
+                  child: Column(
+                    children: [
+                      TableCalendar(
+                        calendarFormat: _calendarFormat,
+                        focusedDay: _focusedDay,
+                        firstDay: kFirstDay,
+                        locale: 'es_ES',
+                        lastDay: kLastDay,
+                        selectedDayPredicate: (day) =>
+                            isSameDay(_selectedDay, day),
+                        onFormatChanged: (format) {
+                          if (_calendarFormat != format) {
+                            setState(() {
+                              _calendarFormat = format;
+                            });
                           }
-                        }
-                        if(daysDifference == 0 || isCompletado ){
-                              decoration = const BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                color: Colors.green
+                        },
+                        onPageChanged: (focusedDay) {
+                          _focusedDay = focusedDay;
+                        },
+                        eventLoader: _EventosxDia,
+                        onDaySelected: _onDaySelected,
+                        availableGestures: AvailableGestures.all,
+                        calendarBuilders: CalendarBuilders(
+                          markerBuilder: (context, day, events) {
+                            BoxDecoration? decoration;
+                            TextStyle? textStyle;
+                            int daysDifference =
+                                day.difference(DateTime.now()).inDays;
+                            bool isCompletado = false;
+                            if (events.isNotEmpty) {
+                              for (var element in eventDetails) {
+                                DateTime eventDate =
+                                    DateTime.parse(element.fechaEvemt!);
+                                if (eventDate.day == day) {
+                                  isCompletado = true;
+                                }
+                              }
+                              if (daysDifference == 0 || isCompletado) {
+                                decoration = const BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.green);
+                              } else if (daysDifference == 1 ||
+                                  daysDifference == 2) {
+                                // Event is in 1 or 2 days
+                                decoration = const BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  color: Colors.yellow,
+                                );
+                              } else if (daysDifference < 0) {
+                                // Event has passed and not completed
+                                decoration = const BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  color: Colors.red,
+                                );
+                                textStyle =
+                                    const TextStyle(color: Colors.white);
+                              } else if (daysDifference > 2) {
+                                decoration = const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.blue,
+                                );
+                                textStyle =
+                                    const TextStyle(color: Colors.white);
+                              }
+
+                              return Container(
+                                width: 22,
+                                height: 22,
+                                decoration: decoration,
+                                child: Center(
+                                  child: Text(
+                                      events.isNotEmpty
+                                          ? '${_EventosxDia(day).length}'
+                                          : '',
+                                      style: textStyle),
+                                ),
                               );
-                            }else if (daysDifference == 1 || daysDifference == 2) {
-                              // Event is in 1 or 2 days
-                              decoration = const BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                color: Colors.yellow,
-                              );
-                            } else if (daysDifference < 0 ) {
-                              // Event has passed and not completed
-                              decoration = const BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                color: Colors.red,
-                              );
-                              textStyle = const TextStyle(color: Colors.white);
-                            } else if (daysDifference > 2){
-                              decoration = const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.blue,
-                              );
-                              textStyle = const TextStyle(color: Colors.white);
                             }
-                      
-                         return Container(
-                          width: 22,
-                          height: 22,
-                          decoration: decoration,
-                          child: Center(
-                            child: Text(events.isNotEmpty ? '${_EventosxDia(day).length}' : '',
-                                style: textStyle),
-                          ),
-                        );
-                        }
-                    },
+                          },
+                        ),
+                        onDayLongPressed: (selectedDay, focusedDay) async {
+                          await _cargarEventos2();
+                          for (var element in eventDetails) {
+                            DateTime eventDate =
+                                DateTime.parse(element.fechaEvemt!);
+                            if (eventDate.day == focusedDay.day) {
+                              objEventModel = element;
+                              break;
+                            } else {
+                              objEventModel = null;
+                            }
+                          }
+                          setState(() {
+                            _showEventDetails(focusedDay);
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      const Text('Codigo colores', style: TextStyle(color: Color.fromARGB(255, 28, 135, 32), fontSize: 20),),
+                      const SizedBox(height: 20),
+                      Expanded(
+                        child: ListView(
+                          children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(borderRadius: BorderRadiusDirectional.circular(10), color: Colors.green,),
+                              margin: EdgeInsets.all(5),
+                              height: 50,
+                              child: const Center(child: Text('Eventos completados')),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(borderRadius: BorderRadiusDirectional.circular(10), color: Colors.yellow,),
+                              margin: EdgeInsets.all(5),
+                              height: 50,
+                              child: const Center(child: Text('Eventos a menos de 2 dias')),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(borderRadius: BorderRadiusDirectional.circular(10), color: Colors.blue,),
+                              margin: EdgeInsets.all(5),
+                              height: 50,
+                              child: const Center(child: Text('Eventos proximos')),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(borderRadius: BorderRadiusDirectional.circular(10), color: Colors.red,),
+                              margin: EdgeInsets.all(5),
+                              height: 50,
+                              child: const Center(child: Text('Eventos no completados')),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  onDayLongPressed: (selectedDay, focusedDay) {
-                    light == false ? light = true : light = false;
-                    setState(() {
-                      
-                    });
-                  },
                 )
               : Expanded(
-                child: FutureBuilder(
-                  future: database?.GETALLEVENT(),
-                  builder: (context, snapshot) {
-                    List<EventModel>? evemtos = snapshot.data;
-                    if (evemtos == null || evemtos.isEmpty) {
-                      return Container(
-                        child: const Text(
-                          "No hay eventos",
-                          style: TextStyle(color: Colors.orange),
-                        ),
-                      );
-                    }
-                    return ListView.builder(
-                        itemCount: evemtos.length,
-                        itemBuilder: (context, idx) {
-                          var colorS;
-                          EventModel c = evemtos[idx];
-                          DateTime eventDate = DateTime.parse(c.fechaEvemt!);
-                          int daysDifference = eventDate.difference(DateTime.now()).inDays;
-                          if(daysDifference == 0 || c.completado! ){
-                              colorS = Colors.green;
-                            }else if (daysDifference == 1 || daysDifference == 2) {
-                              // Event is in 1 or 2 days
-                                colorS = Colors.yellow;
-                            } else if (daysDifference < 0 ) {
-                              // Event has passed and not completed
-                              colorS = Colors.red;
-                            } else if (daysDifference > 2){
-                             colorS = Colors.blue;
-                            }
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                ListTile(
-                                  tileColor: colorS,
-                                  title: Center(child: Text(c.dscEvent.toString())),
-                                  subtitle: Center(child: Text(DateFormat('yyyy-MM-dd').format(DateTime.parse(c.fechaEvemt.toString())))),
-                                  onTap: () {
-                                    
-                                  },
-                                ),
-                                Row(children: [
-                                  Expanded(child: Container()),
-                                  IconButton(
-                                    onPressed: () async {
-                                      descpController.text = c.dscEvent!;
-                                      bool changed = c.completado!;
-                                      await showDialog(
-                                        context: context,
-                                        builder: (context) { 
-                                          return AlertDialog(
-                                          title: const Text('Actualiza la Tarea', textAlign: TextAlign.center,),
-                                          content: StatefulBuilder(
-                                             builder: (BuildContext context, StateSetter setState) { 
-                                              return Column(
-                                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                                mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                TextField(
-                                                  controller: descpController,
-                                                  decoration:
-                                                      InputDecoration(labelText: 'Descripción del evento'),
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Checkbox(
-                                                        value: changed,
-                                                        onChanged: (value) {
-                                                          setState(() {
-                                                            changed = value!;
-                                                          });
-                                                        }),
-                                                    const Text('Marcar como completado'),
-                                                  ],
-                                                ),
-                                              ],
-                                            );}
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                if (descpController.text.isEmpty) {
-                                                  ScaffoldMessenger.of(context).showSnackBar(
-                                                    const SnackBar(
-                                                      content: Text('Se requiere descripción'),
-                                                      duration: Duration(seconds: 2),
-                                                    ),
-                                                  );
-                                                  return;
-                                                } else {
-                                                database?.UPDATEevent('tblEvent',{
-                                                  'idEvent': c.idEvent,
-                                                  'dscEvent': descpController.text,
-                                                  'completado': changed==true? 1: 0,
-                                               }).then((value) {
-                                            var msg = value > 0 ? 'Registro actualizado' : 'Error';
-                                            var snackBar = SnackBar(content: Text(msg));
-                                            descpController.clear();
-                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                            Navigator.pop(context);
-                                            setState(() {});
-                                          });}
-                                              },
-                                              child: const Text('OK'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text('Cancel'),
-                                            )
-                                          ],
-                                        );}
-                                      );
-                                    },
-                                    icon: const Icon(Icons.edit),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                          title: const Text('Confirmar el Borrado'),
-                                          content: const Text('Se borrara la tarea seleccionado'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                database
-                                                    ?.DELETEevent('tblEvent',c.idEvent!)
-                                                    .then((value){ Navigator.pop(context);
-                                                    setState(() {
-                                                      
-                                                    });});
-                                              },
-                                              child: const Text('OK'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text('Cancel'),
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                    icon: const Icon(Icons.delete),
-                                  )
-                                ],)
-                              ],
+                  child: FutureBuilder(
+                      future: database?.GETALLEVENT(),
+                      builder: (context, snapshot) {
+                        List<EventModel>? evemtos = snapshot.data;
+                        if (evemtos == null || evemtos.isEmpty) {
+                          return Container(
+                            child: const Text(
+                              "No hay eventos",
+                              style: TextStyle(color: Colors.orange),
                             ),
                           );
-                        },);
-                  }),
-              )
+                        }
+                        return ListView.builder(
+                          itemCount: evemtos.length,
+                          itemBuilder: (context, idx) {
+                            var colorS;
+                            EventModel c = evemtos[idx];
+                            DateTime eventDate = DateTime.parse(c.fechaEvemt!);
+                            int daysDifference =
+                                eventDate.difference(DateTime.now()).inDays;
+                            if (daysDifference == 0 || c.completado!) {
+                              colorS = Colors.green;
+                            } else if (daysDifference == 1 ||
+                                daysDifference == 2) {
+                              // Event is in 1 or 2 days
+                              colorS = Colors.yellow;
+                            } else if (daysDifference < 0) {
+                              // Event has passed and not completed
+                              colorS = Colors.red;
+                            } else if (daysDifference > 2) {
+                              colorS = Colors.blue;
+                            }
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    tileColor: colorS,
+                                    title: Center(
+                                        child: Text(c.dscEvent.toString())),
+                                    subtitle: Center(
+                                        child: Text(DateFormat('yyyy-MM-dd')
+                                            .format(DateTime.parse(
+                                                c.fechaEvemt.toString())))),
+                                    onTap: () {},
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(child: Container()),
+                                      IconButton(
+                                        onPressed: () async {
+                                          descpController.text = c.dscEvent!;
+                                          bool changed = c.completado!;
+                                          await showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: const Text(
+                                                    'Actualiza la Tarea',
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                  content: StatefulBuilder(
+                                                      builder:
+                                                          (BuildContext context,
+                                                              StateSetter
+                                                                  setState) {
+                                                    return Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .stretch,
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        TextField(
+                                                          controller:
+                                                              descpController,
+                                                          decoration:
+                                                              const InputDecoration(
+                                                                  labelText:
+                                                                      'Descripción del evento'),
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Checkbox(
+                                                                value: changed,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  setState(() {
+                                                                    changed =
+                                                                        value!;
+                                                                  });
+                                                                }),
+                                                            const Text(
+                                                                'Marcar como completado'),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    );
+                                                  }),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        if (descpController
+                                                            .text.isEmpty) {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            const SnackBar(
+                                                              content: Text(
+                                                                  'Se requiere descripción'),
+                                                              duration:
+                                                                  Duration(
+                                                                      seconds:
+                                                                          2),
+                                                            ),
+                                                          );
+                                                          return;
+                                                        } else {
+                                                          database?.UPDATEevent(
+                                                              'tblEvent', {
+                                                            'idEvent':
+                                                                c.idEvent,
+                                                            'dscEvent':
+                                                                descpController
+                                                                    .text,
+                                                            'completado':
+                                                                changed == true
+                                                                    ? 1
+                                                                    : 0,
+                                                          }).then((value) {
+                                                            var msg = value > 0
+                                                                ? 'Registro actualizado'
+                                                                : 'Error';
+                                                            var snackBar =
+                                                                SnackBar(
+                                                                    content: Text(
+                                                                        msg));
+                                                            descpController
+                                                                .clear();
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                                    snackBar);
+                                                            Navigator.pop(
+                                                                context);
+                                                            setState(() {});
+                                                          });
+                                                        }
+                                                      },
+                                                      child: const Text('OK'),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child:
+                                                          const Text('Cancel'),
+                                                    )
+                                                  ],
+                                                );
+                                              });
+                                        },
+                                        icon: const Icon(Icons.edit),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                              title: const Text(
+                                                  'Confirmar el Borrado'),
+                                              content: const Text(
+                                                  'Se borrara la tarea seleccionado'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    database?.DELETEevent(
+                                                            'tblEvent',
+                                                            c.idEvent!)
+                                                        .then((value) {
+                                                      Navigator.pop(context);
+                                                      setState(() {});
+                                                    });
+                                                  },
+                                                  child: const Text('OK'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text('Cancel'),
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                        icon: const Icon(Icons.delete),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      }),
+                ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showAddEventDialog(),
         label: const Text('Add Event'),
+        backgroundColor: const Color.fromARGB(255, 116, 148, 116),
+        icon: const Icon(Icons.add_task),
       ),
-      floatingActionButtonLocation: light == false ? FloatingActionButtonLocation.startFloat: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: light == false
+          ? FloatingActionButtonLocation.startFloat
+          : FloatingActionButtonLocation.endFloat,
     );
     // Center(
     //   child: Column(
@@ -501,7 +612,7 @@ class _EventosScreenState extends State<EventosScreen> {
                       database?.INSERT('tblEvent', {
                         'dscEvent': descpController.text,
                         'fechaEvent': _selectedDay.toString(),
-                        'completado': isChecked==true? 1: 0,
+                        'completado': isChecked == true ? 1 : 0,
                       }).then((value) {
                         var msj = value > 0
                             ? 'Registro insertado'
@@ -521,5 +632,67 @@ class _EventosScreenState extends State<EventosScreen> {
                 )
               ],
             ));
+  }
+
+  _showEventDetails(DateTime focusedDay) async {
+    bool changed = false;
+    String comp = 'No hay eventos disponibles';
+    if (objEventModel != null) {
+      comp = objEventModel!.dscEvent.toString();
+      changed = objEventModel!.completado!;
+      focusedDay = DateTime.parse(objEventModel!.fechaEvemt.toString());
+    }
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text(
+              'Detalles del evento.',
+              textAlign: TextAlign.center,
+            ),
+            content: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Fecha: ${DateFormat('yyyy-MM-dd').format(focusedDay)}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.green),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    'Descripción: $comp',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Row(
+                    children: [
+                      Checkbox(value: changed, onChanged: null),
+                      const Text('¿Completado?'),
+                    ],
+                  ),
+                ],
+              );
+            }),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Cancel'),
+              )
+            ],
+          );
+        });
   }
 }
