@@ -92,14 +92,12 @@ class _EventosScreenState extends State<EventosScreen> {
   bool light = true;
   bool? cambio = false;
   bool dia = false;
+  bool isCompletado = false;
 
   int cont = 0;
 
   @override
   Widget build(BuildContext context) {
-
-    bool isCompletado = false;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nuestros eventos'),
@@ -179,7 +177,7 @@ class _EventosScreenState extends State<EventosScreen> {
                                 decoration = const BoxDecoration(
                                     shape: BoxShape.rectangle,
                                     color: Colors.green);
-                              } else if (daysDifference == 1 ||
+                              } else if (daysDifference == 1 &&
                                   daysDifference == 2) {
                                 // Event is in 1 or 2 days
                                 decoration = const BoxDecoration(
@@ -231,34 +229,59 @@ class _EventosScreenState extends State<EventosScreen> {
                         },
                       ),
                       const SizedBox(height: 20),
-                      const Text('Codigo colores', style: TextStyle(color: Color.fromARGB(255, 28, 135, 32), fontSize: 20),),
+                      const Text(
+                        'Codigo colores',
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 28, 135, 32),
+                            fontSize: 20),
+                      ),
                       const SizedBox(height: 20),
                       Expanded(
                         child: ListView(
                           children: <Widget>[
                             Container(
-                              decoration: BoxDecoration(borderRadius: BorderRadiusDirectional.circular(10), color: Colors.green,),
-                              margin: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadiusDirectional.circular(10),
+                                color: Colors.green,
+                              ),
+                              margin: const EdgeInsets.all(5),
                               height: 50,
-                              child: const Center(child: Text('Eventos completados')),
+                              child: const Center(
+                                  child: Text('Eventos completados')),
                             ),
                             Container(
-                              decoration: BoxDecoration(borderRadius: BorderRadiusDirectional.circular(10), color: Colors.yellow,),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadiusDirectional.circular(10),
+                                color: Colors.yellow,
+                              ),
                               margin: EdgeInsets.all(5),
                               height: 50,
-                              child: const Center(child: Text('Eventos a menos de 2 dias')),
+                              child: const Center(
+                                  child: Text('Eventos a menos de 2 dias')),
                             ),
                             Container(
-                              decoration: BoxDecoration(borderRadius: BorderRadiusDirectional.circular(10), color: Colors.blue,),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadiusDirectional.circular(10),
+                                color: Colors.blue,
+                              ),
                               margin: EdgeInsets.all(5),
                               height: 50,
-                              child: const Center(child: Text('Eventos proximos')),
+                              child:
+                                  const Center(child: Text('Eventos proximos')),
                             ),
                             Container(
-                              decoration: BoxDecoration(borderRadius: BorderRadiusDirectional.circular(10), color: Colors.red,),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadiusDirectional.circular(10),
+                                color: Colors.red,
+                              ),
                               margin: EdgeInsets.all(5),
                               height: 50,
-                              child: const Center(child: Text('Eventos no completados')),
+                              child: const Center(
+                                  child: Text('Eventos no completados')),
                             ),
                           ],
                         ),
@@ -410,9 +433,9 @@ class _EventosScreenState extends State<EventosScreen> {
                                                                     .of(context)
                                                                 .showSnackBar(
                                                                     snackBar);
+                                                                    setState(() {});
                                                             Navigator.pop(
                                                                 context);
-                                                            setState(() {});
                                                           });
                                                         }
                                                       },
@@ -447,7 +470,7 @@ class _EventosScreenState extends State<EventosScreen> {
                                                             'tblEvent',
                                                             c.idEvent!)
                                                         .then((value) {
-                                                          setState(() {});
+                                                      setState(() {});
                                                       Navigator.pop(context);
                                                     });
                                                   },
