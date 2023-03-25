@@ -10,6 +10,6 @@ class EventModel {
         idEvent: map['idEvent'],
         dscEvent: map['dscEvent'],
         fechaEvemt: map['fechaEvent'],
-        completado: map['completado']);
+        completado: map['completado'] == 0 ? false : true,);
   }
 }

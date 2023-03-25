@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:psmnn/provider/flags_provider.dart';
 import 'package:psmnn/provider/theme_provider.dart';
 import 'package:psmnn/routes.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:psmnn/screens/home_screen.dart';
 import 'package:psmnn/screens/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +15,7 @@ void main() async {
   await Firebase.initializeApp();
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   final idTema = sharedPreferences.getInt('id_tema') ?? 0;
-  runApp(MyApp(id_tema: idTema));
+  initializeDateFormatting().then((_) => runApp(MyApp(id_tema: idTema)));
 }
 
 class MyApp extends StatelessWidget {

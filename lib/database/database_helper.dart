@@ -7,7 +7,7 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
   static final nameDB = 'SOCIALDB';
-  static final versionDB = 1;
+  static final versionDB = 2;
   static Database? _database;
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -34,10 +34,10 @@ class DatabaseHelper {
       idEvent INTEGER PRIMARY KEY,
       dscEvent VARCHAR(200),
       fechaEvent DATE,
-      completado BOOLEAN,
+      completado BOOLEAN
     )''';
-    db.execute(query);
-    db.execute(query1);
+    await db.execute(query);
+    await db.execute(query1);
   }
 
   Future<int> INSERT(String tblName, Map<String, dynamic> data) async {
@@ -76,7 +76,32 @@ class DatabaseHelper {
 
   Future<List<EventModel>> GETALLEVENT() async {
     var conexion = await database;
-    var result = await conexion.query('tblEvent');
+    var result = await conexion.query('tblEvent', orderBy: "CASE WHEN fechaEvent = date('now') THEN 1 WHEN fechaEvent > date('now') THEN 2 ELSE 3 END, CASE WHEN fechaEvent = date('now') THEN fechaEvent WHEN fechaEvent > date('now') THEN fechaEvent ELSE -strftime('%s', fechaEvent) END");
+    return result.map((event) => EventModel.fromMap(event)).toList();
+  }
+
+  Future<List<EventModel>> GETDAYEVENT(String cuando) async {
+    var conexion = await database;
+    var result = await conexion.rawQuery("SELECT * FROM tblEvent WHERE fechaEvent = date('$cuando')");
     return result.map((event) => EventModel.fromMap(event)).toList();
   }
 }
+
+
+// '''
+//   SELECT * FROM tblEvent WHERE fechaEvent > date('now')
+//   UNION
+//   SELECT * FROM tblEvent WHERE fechaEvent < date('now');
+//   UNION
+//   SELECT * FROM tblEvent WHERE fechaEvent = date('now')
+//   ORDER BY CASE
+//     WHEN fechaEvent = date('now') THEN 1
+//     WHEN fechaEvent > date('now') THEN 2
+//     ELSE 3
+//   END,
+//   CASE
+//     WHEN fechaEvent = date('now') THEN fechaEvent
+//     WHEN fechaEvent > date('now') THEN fechaEvent
+//     ELSE -strftime('%s', fechaEvent)
+//   END;
+// '''
