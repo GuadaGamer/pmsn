@@ -97,6 +97,9 @@ class _EventosScreenState extends State<EventosScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    bool isCompletado = false;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nuestros eventos'),
@@ -164,13 +167,12 @@ class _EventosScreenState extends State<EventosScreen> {
                             TextStyle? textStyle;
                             int daysDifference =
                                 day.difference(DateTime.now()).inDays;
-                            bool isCompletado = false;
                             if (events.isNotEmpty) {
                               for (var element in eventDetails) {
                                 DateTime eventDate =
                                     DateTime.parse(element.fechaEvemt!);
-                                if (eventDate.day == day) {
-                                  isCompletado = true;
+                                if (eventDate == day) {
+                                  isCompletado = element.completado!;
                                 }
                               }
                               if (daysDifference == 0 || isCompletado) {
@@ -190,17 +192,12 @@ class _EventosScreenState extends State<EventosScreen> {
                                   shape: BoxShape.rectangle,
                                   color: Colors.red,
                                 );
-                                textStyle =
-                                    const TextStyle(color: Colors.white);
                               } else if (daysDifference > 2) {
                                 decoration = const BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: Colors.blue,
                                 );
-                                textStyle =
-                                    const TextStyle(color: Colors.white);
                               }
-
                               return Container(
                                 width: 22,
                                 height: 22,
@@ -450,8 +447,8 @@ class _EventosScreenState extends State<EventosScreen> {
                                                             'tblEvent',
                                                             c.idEvent!)
                                                         .then((value) {
+                                                          setState(() {});
                                                       Navigator.pop(context);
-                                                      setState(() {});
                                                     });
                                                   },
                                                   child: const Text('OK'),
