@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:psmnn/firebase/firebase_emailauth.dart';
 import 'package:psmnn/responsive.dart';
 import 'package:psmnn/widgets/loading_modal_widget.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
@@ -12,15 +13,11 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
+  EmailAuth emailAuth = EmailAuth();
 
-  final txtEmail = TextFormField(
-    decoration: const InputDecoration(
-        label: Text('Email user'), border: OutlineInputBorder()),
-  );
-  final txtPass = TextFormField(
-    decoration: const InputDecoration(
-        label: Text('Password user'), border: OutlineInputBorder()),
-  );
+  TextEditingController emailTxt = TextEditingController();
+  TextEditingController passwordTxt = TextEditingController();
+
   final spaceHorizont = const SizedBox(height: 10);
 
   final btngoogle = SocialLoginButton(
@@ -37,16 +34,35 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final txtEmail = TextFormField(
+      controller: emailTxt,
+      decoration: const InputDecoration(
+          label: Text('Email user'), border: OutlineInputBorder()),
+    );
+    final txtPass = TextFormField(
+      controller: passwordTxt,
+      decoration: const InputDecoration(
+          label: Text('Password user'), border: OutlineInputBorder()),
+    );
+
     final btnEmail = SocialLoginButton(
         buttonType: SocialLoginButtonType.generalLogin,
         onPressed: () {
           isLoading = true;
           setState(() {});
-          Future.delayed(const Duration(milliseconds: 4000)).then((value) {
-            isLoading = false;
-            setState(() {});
-            Navigator.pushNamed(context, '/dash');
+          //Future.delayed(const Duration(milliseconds: 4000)).then((value) {
+          emailAuth
+              .signInWithEmailandPassword(
+                  email: emailTxt.text, password: passwordTxt.text)
+              .then((value) {
+            if (value) {
+              Navigator.pushNamed(context, '/dash');
+            } else {
+              //snackbar de error
+            }
           });
+          isLoading = false;
+          setState(() {});
         });
     final txtRegister = Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),

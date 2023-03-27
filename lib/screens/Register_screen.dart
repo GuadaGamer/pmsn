@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:psmnn/firebase/firebase_emailauth.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -17,6 +18,9 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController dateCtl = TextEditingController();
+  TextEditingController emailUser = TextEditingController();
+  TextEditingController passwordUser = TextEditingController();
+  EmailAuth? emailAuth;
   DateTime? _selectedDate;
   File? pickedImage;
 
@@ -35,48 +39,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
         : "Por favor ingresa un correo valido",
   );
 
-  final txtUser = TextFormField(
-    decoration: const InputDecoration(
-        icon: Icon(Icons.account_box),
-        labelText: 'Nombre de usuario',
-        helperText: 'Escribe tu nombre de usuario',
-        border: OutlineInputBorder(),
-        isDense: false,
-        contentPadding: EdgeInsets.all(10)),
-    validator: (value) {
-      if (value!.isEmpty || value.length <= 5) {
-        return 'Proporciona un nombre valido mayor a 5';
-      }
-      return null;
-    },
-  );
-
-  final password = TextFormField(
-    decoration: const InputDecoration(
-        icon: Icon(Icons.password),
-        labelText: 'Password',
-        helperText: 'Examp3le#1',
-        border: OutlineInputBorder(),
-        isDense: false,
-        contentPadding: EdgeInsets.all(10)),
-    obscureText: true,
-    validator: (value) {
-      RegExp regex = RegExp(
-          r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&/¿*~?_-]).{8,}$');
-      if (value!.isEmpty) {
-        return "Por favor completa este campo";
-      } else {
-        if (!regex.hasMatch(value)) {
-          return "Tu contraseña debe contener por lo menos: \n8 digitos\n1 Mayuscula\n1 minuscula\n1 numero\n1 caracter especial";
-        } else {
-          return null;
-        }
-      }
-    },
-  );
-
   @override
   Widget build(BuildContext context) {
+    final txtUser = TextFormField(
+      controller: emailUser,
+      decoration: const InputDecoration(
+          icon: Icon(Icons.account_box),
+          labelText: 'Nombre de usuario',
+          helperText: 'Escribe tu nombre de usuario',
+          border: OutlineInputBorder(),
+          isDense: false,
+          contentPadding: EdgeInsets.all(10)),
+      validator: (value) {
+        if (value!.isEmpty || value.length <= 5) {
+          return 'Proporciona un nombre valido mayor a 5';
+        }
+        return null;
+      },
+    );
+
+    final password = TextFormField(
+      controller: passwordUser,
+      decoration: const InputDecoration(
+          icon: Icon(Icons.password),
+          labelText: 'Password',
+          helperText: 'Examp3le#1',
+          border: OutlineInputBorder(),
+          isDense: false,
+          contentPadding: EdgeInsets.all(10)),
+      obscureText: true,
+      validator: (value) {
+        RegExp regex = RegExp(
+            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&/¿*~?_-]).{8,}$');
+        if (value!.isEmpty) {
+          return "Por favor completa este campo";
+        } else {
+          if (!regex.hasMatch(value)) {
+            return "Tu contraseña debe contener por lo menos: \n8 digitos\n1 Mayuscula\n1 minuscula\n1 numero\n1 caracter especial";
+          } else {
+            return null;
+          }
+        }
+      },
+    );
+
     void imagePickerOption() {
       Get.bottomSheet(
         SingleChildScrollView(
@@ -290,7 +296,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           ElevatedButton(
                               onPressed: () {
+                                //puede que haga falta inicializar
                                 if (_formKey.currentState!.validate()) {
+                                  emailAuth!.createUserWithEmailAndPassword(
+                                      email: emailUser.text,
+                                      password: passwordUser.text);
                                   Navigator.pushNamed(context, '/dash');
                                 }
                               },
