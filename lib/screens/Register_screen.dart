@@ -20,29 +20,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController dateCtl = TextEditingController();
   TextEditingController emailUser = TextEditingController();
   TextEditingController passwordUser = TextEditingController();
-  EmailAuth? emailAuth;
+  EmailAuth emailAuth = EmailAuth();
   DateTime? _selectedDate;
   File? pickedImage;
 
   bool circular = false;
 
-  final txtMail = TextFormField(
-    decoration: const InputDecoration(
-        icon: Icon(Icons.mail),
-        labelText: 'correo@example.com',
-        helperText: 'Escribe tu correo',
-        border: OutlineInputBorder(),
-        isDense: false,
-        contentPadding: EdgeInsets.all(10)),
-    validator: (value) => EmailValidator.validate(value!)
-        ? null
-        : "Por favor ingresa un correo valido",
-  );
-
   @override
   Widget build(BuildContext context) {
-    final txtUser = TextFormField(
+    final txtMail = TextFormField(
       controller: emailUser,
+      decoration: const InputDecoration(
+          icon: Icon(Icons.mail),
+          labelText: 'correo@example.com',
+          helperText: 'Escribe tu correo',
+          border: OutlineInputBorder(),
+          isDense: false,
+          contentPadding: EdgeInsets.all(10)),
+      validator: (value) => EmailValidator.validate(value!)
+          ? null
+          : "Por favor ingresa un correo valido",
+    );
+
+    final txtUser = TextFormField(
       decoration: const InputDecoration(
           icon: Icon(Icons.account_box),
           labelText: 'Nombre de usuario',
@@ -296,11 +296,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           ElevatedButton(
                               onPressed: () {
-                                //puede que haga falta inicializar
                                 if (_formKey.currentState!.validate()) {
-                                  emailAuth!.createUserWithEmailAndPassword(
-                                      email: emailUser.text,
-                                      password: passwordUser.text);
+                                  emailAuth.createUserWithEmailAndPassword(
+                                      email: emailUser.text.toString(),
+                                      password: passwordUser.text.toString());
                                   Navigator.pushNamed(context, '/dash');
                                 }
                               },

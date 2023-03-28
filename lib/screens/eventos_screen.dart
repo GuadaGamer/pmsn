@@ -164,6 +164,8 @@ class _EventosScreenState extends State<EventosScreen> {
                             BoxDecoration? decoration;
                             TextStyle? textStyle;
                             int daysDifference =
+                                (day.day - DateTime.now().day).round();
+                            int daysDifference2 =
                                 day.difference(DateTime.now()).inDays;
                             if (events.isNotEmpty) {
                               for (var element in eventDetails) {
@@ -173,28 +175,29 @@ class _EventosScreenState extends State<EventosScreen> {
                                   isCompletado = element.completado!;
                                 }
                               }
-                              if (daysDifference == 0 || isCompletado) {
-                                decoration = const BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    color: Colors.green);
-                              } else if (daysDifference == 1 &&
-                                  daysDifference == 2) {
+                              if ((daysDifference >= 1 &&
+                                      daysDifference <= 2) &&
+                                  !isCompletado) {
                                 // Event is in 1 or 2 days
                                 decoration = const BoxDecoration(
                                   shape: BoxShape.rectangle,
                                   color: Colors.yellow,
                                 );
-                              } else if (daysDifference < 0) {
+                              } else if (daysDifference < 0 && !isCompletado) {
                                 // Event has passed and not completed
                                 decoration = const BoxDecoration(
                                   shape: BoxShape.rectangle,
                                   color: Colors.red,
                                 );
-                              } else if (daysDifference > 2) {
+                              } else if (daysDifference > 2 && !isCompletado) {
                                 decoration = const BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: Colors.blue,
                                 );
+                              } else {
+                                decoration = const BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: Colors.black);
                               }
                               return Container(
                                 width: 22,
@@ -433,7 +436,7 @@ class _EventosScreenState extends State<EventosScreen> {
                                                                     .of(context)
                                                                 .showSnackBar(
                                                                     snackBar);
-                                                                    setState(() {});
+                                                            setState(() {});
                                                             Navigator.pop(
                                                                 context);
                                                           });

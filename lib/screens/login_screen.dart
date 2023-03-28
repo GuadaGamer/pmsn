@@ -58,6 +58,8 @@ class _LoginScreenState extends State<LoginScreen> {
             if (value) {
               Navigator.pushNamed(context, '/dash');
             } else {
+              const SnackBar(
+                  content: Text('Introduce las credenciales correctas'));
               //snackbar de error
             }
           });
