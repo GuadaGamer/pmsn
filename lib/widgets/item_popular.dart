@@ -42,20 +42,38 @@ class _ItemPopularState extends State<ItemPopular> {
                         Icons.star,
                         size: 30,
                       ),
-                      color: snapshot.data!=true? Colors.greenAccent: Colors.red,
+                      color: snapshot.data != true
+                          ? Colors.greenAccent
+                          : Colors.red,
                       onPressed: () {
-                        if (snapshot.data!=true) {
+                        if (snapshot.data != true) {
                           database
                               .INSERT(
                                   'tblPopularFav', widget.popularModel.toMap())
-                              .then((value) => flag.setflagListPost());
+                              .then((value) {
+                            flag.setflagListPost();
+                            var msj = value > 0
+                                ? 'Se agrego a favoritos'
+                                : 'ocurrio un error';
+
+                            var snackBar = SnackBar(content: Text(msj));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          });
                         } else {
-                          database
-                              .DELETEpopular(
-                                'tblPopularFav',
-                                widget.popularModel.id!,
-                              )
-                              .then((value) => flag.setflagListPost());
+                          database.DELETEpopular(
+                            'tblPopularFav',
+                            widget.popularModel.id!,
+                          ).then((value) {
+                            flag.setflagListPost();
+                            var msj = value > 0
+                                ? 'Se quito de favoritos'
+                                : 'ocurrio un error';
+
+                            var snackBar = SnackBar(content: Text(msj));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          });
                         }
                       },
                     );

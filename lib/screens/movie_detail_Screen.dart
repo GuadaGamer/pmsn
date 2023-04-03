@@ -60,21 +60,36 @@ class MovieDetail extends StatelessWidget {
                       if (snapshot.data != true) {
                         database
                             .INSERT('tblPopularFav', modelo.toMap())
-                            .then((value) => flag.setflagListPost());
+                            .then((value) {
+                          flag.setflagListPost();
+                          var msj = value > 0
+                              ? 'Se agrego a favoritos'
+                              : 'ocurrio un error';
+
+                          var snackBar = SnackBar(content: Text(msj));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        });
                       } else {
                         database.DELETEpopular(
                           'tblPopularFav',
                           modelo.id!,
-                        ).then((value) => flag.setflagListPost());
+                        ).then((value) {
+                          flag.setflagListPost();
+                          var msj = value > 0
+                              ? 'Se quito de favoritos'
+                              : 'ocurrio un error';
+
+                          var snackBar = SnackBar(content: Text(msj));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        });
                       }
                     },
                     child: Column(
                       children: [
                         Icon(
                           Icons.star,
-                          color: snapshot.data != true
-                              ? Colors.white
-                              : Colors.red,
+                          color:
+                              snapshot.data != true ? Colors.white : Colors.red,
                         ),
                         const Text(
                           'Añadir a favoritos',
