@@ -30,7 +30,7 @@ class PopularModel {
   factory PopularModel.fromMap(Map<String, dynamic> map) {
     return PopularModel(
         id: map['id'],
-        backdropPath: map['backdrop_path'],
+        backdropPath: map['backdrop_path']!=null?map['backdrop_path']:map['poster_path'],
         originalLanguage: map['original_language'],
         originalTitle: map['original_title'],
         overview: map['overview'],
@@ -42,5 +42,21 @@ class PopularModel {
             ? (map['vote_average'] as int).toDouble()
             : map['vote_average'],
         voteCount: map['voteCount']);
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'backdrop_path': backdropPath,
+      'original_language': originalLanguage,
+      'original_title': originalTitle,
+      'overview': overview,
+      'popularity': popularity,
+      'poster_path': posterPath,
+      'release_date': releaseDate,
+      'title': title,
+      'vote_average': voteAverage,
+      'vote_count': voteCount,
+    };
   }
 }

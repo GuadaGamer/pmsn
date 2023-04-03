@@ -41,6 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
     final txtPass = TextFormField(
       controller: passwordTxt,
+      obscureText: true,
       decoration: const InputDecoration(
           label: Text('Password user'), border: OutlineInputBorder()),
     );
@@ -58,8 +59,14 @@ class _LoginScreenState extends State<LoginScreen> {
             if (value) {
               Navigator.pushNamed(context, '/dash');
             } else {
-              const SnackBar(
-                  content: Text('Introduce las credenciales correctas'));
+              final snackbar = SnackBar(
+                content: const Text('Revisa los datos ingresados'),
+                action: SnackBarAction(
+                label: 'Undo',
+                onPressed: () {},
+                 ),
+                 );
+                ScaffoldMessenger.of(context).showSnackBar(snackbar);
               //snackbar de error
             }
           });

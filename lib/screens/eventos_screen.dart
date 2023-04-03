@@ -161,12 +161,11 @@ class _EventosScreenState extends State<EventosScreen> {
                         availableGestures: AvailableGestures.all,
                         calendarBuilders: CalendarBuilders(
                           markerBuilder: (context, day, events) {
+                            _cargarEventos2();
                             BoxDecoration? decoration;
                             TextStyle? textStyle;
                             int daysDifference =
                                 (day.day - DateTime.now().day).round();
-                            int daysDifference2 =
-                                day.difference(DateTime.now()).inDays;
                             if (events.isNotEmpty) {
                               for (var element in eventDetails) {
                                 DateTime eventDate =
@@ -197,7 +196,7 @@ class _EventosScreenState extends State<EventosScreen> {
                               } else {
                                 decoration = const BoxDecoration(
                                     shape: BoxShape.rectangle,
-                                    color: Colors.black);
+                                    color: Colors.green);
                               }
                               return Container(
                                 width: 22,
@@ -214,8 +213,7 @@ class _EventosScreenState extends State<EventosScreen> {
                             }
                           },
                         ),
-                        onDayLongPressed: (selectedDay, focusedDay) async {
-                          await _cargarEventos2();
+                        onDayLongPressed: (selectedDay, focusedDay) {
                           for (var element in eventDetails) {
                             DateTime eventDate =
                                 DateTime.parse(element.fechaEvemt!);
