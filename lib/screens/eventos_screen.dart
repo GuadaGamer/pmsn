@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:psmnn/models/event_model.dart';
 import 'package:psmnn/models/post_model.dart';
+import 'package:psmnn/provider/flags_provider.dart';
 import 'package:psmnn/utils.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -98,6 +100,8 @@ class _EventosScreenState extends State<EventosScreen> {
 
   @override
   Widget build(BuildContext context) {
+    FlagsProvider flag = Provider.of<FlagsProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nuestros eventos'),
@@ -310,18 +314,18 @@ class _EventosScreenState extends State<EventosScreen> {
                             EventModel c = evemtos[idx];
                             DateTime eventDate = DateTime.parse(c.fechaEvemt!);
                             int daysDifference =
-                                eventDate.difference(DateTime.now()).inDays;
-                            if (daysDifference == 0 || c.completado!) {
-                              colorS = Colors.green;
-                            } else if (daysDifference == 1 ||
-                                daysDifference == 2) {
+                                (eventDate.day - DateTime.now().day).round();
+                            if ((daysDifference >= 1 && daysDifference <= 2) &&
+                                !c.completado!) {
                               // Event is in 1 or 2 days
                               colorS = Colors.yellow;
-                            } else if (daysDifference < 0) {
+                            } else if (daysDifference < 0 && !c.completado!) {
                               // Event has passed and not completed
                               colorS = Colors.red;
-                            } else if (daysDifference > 2) {
+                            } else if (daysDifference > 2 && !c.completado!) {
                               colorS = Colors.blue;
+                            } else {
+                              colorS = Colors.green;
                             }
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -421,6 +425,7 @@ class _EventosScreenState extends State<EventosScreen> {
                                                                     ? 1
                                                                     : 0,
                                                           }).then((value) {
+                                                            flag.setflagListPost();
                                                             var msg = value > 0
                                                                 ? 'Registro actualizado'
                                                                 : 'Error';
@@ -471,6 +476,7 @@ class _EventosScreenState extends State<EventosScreen> {
                                                             'tblEvent',
                                                             c.idEvent!)
                                                         .then((value) {
+                                                      flag.setflagListPost();
                                                       setState(() {});
                                                       Navigator.pop(context);
                                                     });
