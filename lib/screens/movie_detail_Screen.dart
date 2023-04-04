@@ -91,8 +91,10 @@ class MovieDetail extends StatelessWidget {
                           color:
                               snapshot.data != true ? Colors.white : Colors.red,
                         ),
-                        const Text(
-                          'Añadir a favoritos',
+                        Text(
+                          snapshot.data != true
+                              ? 'Añadir a favoritos'
+                              : 'Quitar de favoritos',
                           style: TextStyle(color: Colors.white),
                         ),
                       ],
