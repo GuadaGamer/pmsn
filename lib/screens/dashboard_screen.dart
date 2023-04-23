@@ -1,12 +1,15 @@
-import 'package:day_night_switcher/day_night_switcher.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:psmnn/firebase/firebase_facebookauth.dart';
 import 'package:psmnn/provider/theme_provider.dart';
 import 'package:psmnn/screens/list_post.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+  DashboardScreen({super.key});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -49,14 +52,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
       drawer: Drawer(
         child: ListView(
           children: [
-            const UserAccountsDrawerHeader(
+            UserAccountsDrawerHeader(
                 currentAccountPicture: CircleAvatar(
-                  backgroundImage: AssetImage('assets/itce.png'),
+                  backgroundImage: NetworkImage(FirebaseAuth.instance.currentUser!.photoURL ?? 'assets/itce.png'),
                   //NetworkImage(
                   //'https://static.wikia.nocookie.net/liga-mx/images/1/11/LTClogoant.png/revision/latest?cb=20200826190754&path-prefix=es'),
                 ),
-                accountName: Text('Guadalupe Sanchez'),
-                accountEmail: Text('19030053@itcelaya.edu.mx')),
+                accountName: Text(FirebaseAuth.instance.currentUser!.displayName ?? 'Nombre de usuario'),
+                accountEmail: Text(FirebaseAuth.instance.currentUser!.email ?? 'correo@ejemplo.com')),
+            ListTile(
+              onTap: (){
+                Navigator.pushNamed(context, '/profile');
+              },
+              title: const Text('Perfil'),
+              subtitle: const Text('Revisa tu perfil aqui'),
+              leading: const Icon(Icons.view_comfy),
+              trailing: const Icon(Icons.chevron_right),
+            ),
             ListTile(
               onTap: () {
                 Navigator.pushNamed(context, '/eventos');
@@ -84,8 +96,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
               trailing: const Icon(Icons.chevron_right),
             ),
             ListTile(
-              onTap: () {
-                Navigator.pushNamed(context, '/login');
+              onTap: () async {
+                final googleSignIn = GoogleSignIn();
+                await FirebaseAuth.instance.signOut();
+                if (googleSignIn.isSignedIn() == true){  await googleSignIn.disconnect(); }
+                await FacebookAuth.instance.logOut();
+                Navigator.popAndPushNamed(context, '/login');
               },
               title: const Text('Cerrar sesión'),
               leading: const Icon(Icons.close),

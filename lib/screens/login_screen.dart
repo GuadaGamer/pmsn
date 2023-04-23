@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:psmnn/firebase/firebase_emailauth.dart';
+import 'package:psmnn/firebase/firebase_facebookauth.dart';
+import 'package:psmnn/firebase/firebase_googleauth.dart';
 import 'package:psmnn/responsive.dart';
+import 'package:psmnn/screens/dashboard_screen.dart';
 import 'package:psmnn/widgets/loading_modal_widget.dart';
 import 'package:social_login_buttons/social_login_buttons.dart';
 
@@ -14,16 +17,14 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
   EmailAuth emailAuth = EmailAuth();
+  FaceAuth faceAuth = FaceAuth();
+  GoogleAuthentication googleA = GoogleAuthentication();
 
   TextEditingController emailTxt = TextEditingController();
   TextEditingController passwordTxt = TextEditingController();
 
   final spaceHorizont = const SizedBox(height: 10);
 
-  final btngoogle = SocialLoginButton(
-      buttonType: SocialLoginButtonType.google, onPressed: () {});
-  final btnface = SocialLoginButton(
-      buttonType: SocialLoginButtonType.facebook, onPressed: () {});
   final btngit = SocialLoginButton(
       buttonType: SocialLoginButtonType.github, onPressed: () {});
 
@@ -45,6 +46,41 @@ class _LoginScreenState extends State<LoginScreen> {
       decoration: const InputDecoration(
           label: Text('Password user'), border: OutlineInputBorder()),
     );
+
+    final btnface = SocialLoginButton(
+      buttonType: SocialLoginButtonType.facebook, onPressed: () async {
+        var result = await faceAuth.signInWithFacebook();
+          if(result.user != null){
+             Navigator.pushNamed(context, '/dash');
+        }else{
+           final snackbar = SnackBar(
+                content: const Text('Revisa los datos ingresados'),
+                action: SnackBarAction(
+                label: 'Undo',
+                onPressed: () {},
+                 ),
+                 );
+                ScaffoldMessenger.of(context).showSnackBar(snackbar);
+        }
+      });
+
+    final btngoogle = SocialLoginButton(
+      buttonType: SocialLoginButtonType.google, onPressed: () async {
+        var result = await googleA.signInWithGoogle();
+
+        if(result.user != null){
+           Navigator.pushNamed(context, '/dash');
+        }else{
+           final snackbar = SnackBar(
+                content: const Text('Revisa los datos ingresados'),
+                action: SnackBarAction(
+                label: 'Undo',
+                onPressed: () {},
+                 ),
+                 );
+                ScaffoldMessenger.of(context).showSnackBar(snackbar);
+        }
+      });
 
     final btnEmail = SocialLoginButton(
         buttonType: SocialLoginButtonType.generalLogin,
