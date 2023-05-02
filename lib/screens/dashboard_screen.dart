@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:psmnn/firebase/firebase_facebookauth.dart';
 import 'package:psmnn/provider/theme_provider.dart';
+import 'package:psmnn/screens/list_favorites_cloud.dart';
 import 'package:psmnn/screens/list_post.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,7 +40,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         title: const Text('Social TEC'),
       ),
-      body: ListPost(),
+      body: ListFavoritesCloud(),//ListPost(),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.pushNamed(context, '/add').then((value) {
