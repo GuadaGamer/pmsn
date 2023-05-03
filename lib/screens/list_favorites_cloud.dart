@@ -43,7 +43,7 @@ class _ListFavoritesCloudState extends State<ListFavoritesCloud> {
                     ),
                   ),
                   Row(children: [
-                    Icon(Icons.start),
+                    const Icon(Icons.start),
                     Text(snapshot.data!.docs[index].get('vote_count')),
                   ],),
                   Text(snapshot.data!.docs[index].get('overview')),
