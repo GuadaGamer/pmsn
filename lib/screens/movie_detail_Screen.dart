@@ -167,7 +167,7 @@ class MovieDetail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              modelo!.title.toString(),
+              modelo.title.toString(),
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 30,

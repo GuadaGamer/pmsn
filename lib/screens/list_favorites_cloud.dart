@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:psmnn/database/database_helper.dart';
 import 'package:psmnn/firebase/favorites_firebase.dart';
 
 class ListFavoritesCloud extends StatefulWidget {
@@ -16,23 +15,72 @@ class _ListFavoritesCloudState extends State<ListFavoritesCloud> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: StreamBuilder(
-      stream: _firebase.getAllFavorites(),
-      builder: (context, snapshot) {
+          stream: _firebase.getAllFavorites(),
+          builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return GridView.builder(
-            padding: const EdgeInsets.all(10),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: .7,
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
-            ),
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
-              //return Text(snapshot.data!.docs[index].get('title'));
-              return Stack(
+              return Column(
                 children: [
-                  ListTile(title:snapshot.data!.docs[index].get('title')),
+                  Text(snapshot.data!.docs[index].get('titulo')),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    //crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      IconButton(
+                          onPressed: () {}, icon: const Icon(Icons.favorite)),
+                      IconButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                  title: const Text('Confirmar borrado'),
+                                  content:
+                                      const Text('Deseas borrar el favorito?'),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          _firebase.delFavorite(
+                                              snapshot.data!.docs[index].id);
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('Si')),
+                                    TextButton(
+                                        onPressed: () {},
+                                        child: const Text('No'))
+                                  ]),
+                            );
+                          },
+                          icon: const Icon(Icons.delete))
+                    ],
+                  ),
+                  ClipRRect(
+                    child: FadeInImage(
+                      fit: BoxFit.fitWidth,
+                      placeholder:
+                          const AssetImage('assets/loading_tetris.gif'),
+                      image: NetworkImage(
+                          'https://image.tmdb.org/t/p/w500${snapshot.data!.docs[index].get('poster_path')}'),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.star),
+                      Text("${snapshot.data!.docs[index].get('vote_count')}"),
+                    ],
+                  ),
+                  Text(snapshot.data!.docs[index].get('overview')),
+                ],
+              );
+              /* return Stack(
+                children: [
+                  Column(
+                    children: [
+                      Text(snapshot.data!.docs[index].get('titulo')),
                   ClipRRect(
                     child: FadeInImage(
                       fit: BoxFit.fitWidth,
@@ -43,10 +91,12 @@ class _ListFavoritesCloudState extends State<ListFavoritesCloud> {
                     ),
                   ),
                   Row(children: [
-                    const Icon(Icons.start),
-                    Text(snapshot.data!.docs[index].get('vote_count')),
+                    const Icon(Icons.star),
+                    Text("${snapshot.data!.docs[index].get('vote_count')}"),
                   ],),
-                  Text(snapshot.data!.docs[index].get('overview')),
+                  Text(snapshot.data!.docs[index].get('overview'))
+                    ],
+                  ),
                   Positioned(
                     top: 0,
                     right: 0,
@@ -79,7 +129,7 @@ class _ListFavoritesCloudState extends State<ListFavoritesCloud> {
                     ),
                   ),
                 ],
-              );
+              );*/
             },
           );
         } else if (snapshot.hasError) {

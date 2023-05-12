@@ -6,6 +6,7 @@ import 'package:psmnn/screens/dashboard_screen.dart';
 import 'package:psmnn/screens/list_favorites_cloud.dart';
 import 'package:psmnn/screens/list_popular_videos.dart';
 import 'package:psmnn/screens/login_screen.dart';
+import 'package:psmnn/screens/map_screen.dart';
 import 'package:psmnn/screens/pages/profile_screen.dart';
 import 'package:psmnn/screens/themeSelector_screen.dart';
 
@@ -20,5 +21,6 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     '/popular': (BuildContext context) => const ListPopularVideos(),
     '/profile': (BuildContext context) => ProfileScreen(),
     '/favorites': (BuildContext context) => const ListFavoritesCloud(),
+    '/maps': (BuildContext context) => const MapSample(),
   };
 }

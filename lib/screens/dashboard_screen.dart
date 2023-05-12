@@ -55,12 +55,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             UserAccountsDrawerHeader(
                 currentAccountPicture: CircleAvatar(
-                  backgroundImage: NetworkImage(FirebaseAuth.instance.currentUser!.photoURL ?? 'assets/itce.png'),
+                  backgroundImage: NetworkImage(FirebaseAuth.instance.currentUser?.photoURL ?? 'assets/itce.png'),
                   //NetworkImage(
                   //'https://static.wikia.nocookie.net/liga-mx/images/1/11/LTClogoant.png/revision/latest?cb=20200826190754&path-prefix=es'),
                 ),
-                accountName: Text(FirebaseAuth.instance.currentUser!.displayName ?? 'Nombre de usuario'),
-                accountEmail: Text(FirebaseAuth.instance.currentUser!.email ?? 'correo@ejemplo.com')),
+                accountName: Text(FirebaseAuth.instance.currentUser?.displayName ?? 'Nombre de usuario'),
+                accountEmail: Text(FirebaseAuth.instance.currentUser?.email ?? 'correo@ejemplo.com')),
             ListTile(
               onTap: (){
                 Navigator.pushNamed(context, '/profile');
@@ -85,6 +85,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
               },
               title: const Text('API videos'),
               leading: const Icon(Icons.movie),
+              trailing: const Icon(Icons.chevron_right),
+            ),
+            ListTile(
+              onTap: () {
+                Navigator.pushNamed(context, '/maps');
+              },
+              title: const Text('Mapas'),
+              leading: const Icon(Icons.map_outlined),
               trailing: const Icon(Icons.chevron_right),
             ),
             ListTile(

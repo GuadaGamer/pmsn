@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:psmnn/database/database_helper.dart';
+import 'package:psmnn/firebase/favorites_firebase.dart';
 import 'package:psmnn/models/popular_model.dart';
 import 'package:psmnn/provider/flags_provider.dart';
 import 'package:psmnn/screens/movie_detail_Screen.dart';
@@ -16,6 +17,7 @@ class ListPopularVideos extends StatefulWidget {
 }
 
 class _ListPopularVideosState extends State<ListPopularVideos> {
+  FavoritesFirebase _firebase = FavoritesFirebase();
   ApiPopular? apiPoular;
   DatabaseHelper? database;
   bool favoritView = false;

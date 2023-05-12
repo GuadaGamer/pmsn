@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:psmnn/database/database_helper.dart';
+import 'package:psmnn/firebase/favorites_firebase.dart';
 import 'package:psmnn/models/popular_model.dart';
 import 'package:psmnn/provider/flags_provider.dart';
 
@@ -14,6 +15,7 @@ class ItemPopular extends StatefulWidget {
 }
 
 class _ItemPopularState extends State<ItemPopular> {
+  FavoritesFirebase _firebase = FavoritesFirebase();
   DatabaseHelper database = DatabaseHelper();
 
   @override
@@ -47,6 +49,14 @@ class _ItemPopularState extends State<ItemPopular> {
                           : Colors.red,
                       onPressed: () {
                         if (snapshot.data != true) {
+                          _firebase.insFavorite(
+                            {
+                              'titulo': widget.popularModel.title,
+                              'poster_path': widget.popularModel.posterPath,
+                              'vote_count': widget.popularModel.voteAverage,
+                              'overview': widget.popularModel.overview,
+                            }
+                          );
                           database
                               .INSERT(
                                   'tblPopularFav', widget.popularModel.toMap())
